@@ -7,7 +7,6 @@ import java.util.UUID;
 
 public class Client extends Person{
     private String clientId;
-    private List<Client> accounts = new ArrayList<>();
     
     public Client(String name , String email, String password) {
         super(name , email, password);
@@ -16,8 +15,5 @@ public class Client extends Person{
 
     public String getClientId(){
         return clientId;
-    }
-    public List<Client> getAccounts(){
-        return accounts;
     }
 }

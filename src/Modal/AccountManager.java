@@ -1,17 +1,16 @@
 package Modal;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 public class AccountManager extends Person{
     private String managerId;
-    private List<Client> clientList = new ArrayList<>();
 
     public AccountManager(String name,String email, String password){
         super(name,email,password);
+        this.managerId = UUID.randomUUID().toString();
     }
 
-    public List<Client> getClientList(){
-        return clientList;
+    public String getManagerId() {
+        return managerId;
     }
 }
