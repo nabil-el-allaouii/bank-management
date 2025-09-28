@@ -17,13 +17,22 @@ public class InMemoryAccountService implements AccountRepository {
     }
 
     @Override
-    public List<Account> getAccountsById(String id) {
-        return accounts.stream().filter(account -> account.getClientId().equals(id)).toList();
+    public List<Account> getAccountsByClientId(String clientId) {
+        return accounts.stream()
+                .filter(account -> account.getClientId().equals(clientId))
+                .toList();
     }
 
     @Override
     public Collection<Account> getAllAccounts() {
         return accounts;
+    }
+
+    @Override
+    public Optional<Account> findByAccountId(String accountId) {
+        return accounts.stream()
+                .filter(account -> account.getAccountId().equals(accountId))
+                .findFirst();
     }
 
     @Override
@@ -41,7 +50,8 @@ public class InMemoryAccountService implements AccountRepository {
 
     @Override
     public void deleteAccountById(String id) {
-        Account accountToRemove = accounts.stream().filter(account->account.getAccountId().equals(id)).findFirst().orElseThrow(()-> new NoSuchElementException("Account not found"));
+        Account accountToRemove = accounts.stream().filter(account -> account.getAccountId().equals(id)).findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Account not found"));
         accounts.remove(accountToRemove);
     }
 }

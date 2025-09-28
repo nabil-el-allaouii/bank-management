@@ -2,6 +2,6 @@ package Modal.Enums;
 
 public enum TransactionType {
     DEPOT,
-    RETRAITE,
+    RETRAIT,
     VIREMENT
 }

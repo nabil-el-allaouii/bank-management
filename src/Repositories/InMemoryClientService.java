@@ -47,8 +47,16 @@ public class InMemoryClientService implements ClientRepository {
     }
 
     @Override
-    public void deleteClientById(String clientId){
-        Client clientToRemove =  clientList.stream().filter(c -> c.getClientId().equals(clientId)).findFirst().orElseThrow(() -> new NoSuchElementException("Client not found"));
+    public void deleteClientById(String clientId) {
+        Client clientToRemove = clientList.stream().filter(c -> c.getClientId().equals(clientId)).findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Client not found"));
         clientList.remove(clientToRemove);
+    }
+
+    @Override
+    public Optional<Client> findById(String clientId) {
+        return clientList.stream()
+                .filter(client -> client.getClientId().equals(clientId))
+                .findFirst();
     }
 }
