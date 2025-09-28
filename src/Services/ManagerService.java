@@ -1,15 +1,22 @@
 package Services;
 
+import Modal.Account;
 import Modal.Client;
+import Modal.Enums.AccountType;
+import Repositories.AccountRepository;
 import Repositories.ClientRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class ManagerService {
     private final ClientRepository clientRepo;
+    private final AccountRepository  accountRepo;
 
-    public ManagerService(ClientRepository clientRepo){
+    public ManagerService(ClientRepository clientRepo , AccountRepository accountRepo){
         this.clientRepo = clientRepo;
+        this.accountRepo = accountRepo;
     }
 
     public void updateClientNameById(String clientId , String name){
@@ -24,5 +31,27 @@ public class ManagerService {
     }
     public List<Client> getAllClients(){
         return clientRepo.getAllClients();
+    }
+
+    public void removeClientById(String clientId){
+        clientRepo.deleteClientById(clientId);
+    }
+
+    public void createAccountForClient(AccountType accountType , double balance , String clientId){
+        Account account = new Account(accountType , balance , clientId);
+        accountRepo.save(account);
+    }
+
+    public void updateAccountBalanceById(String accountId , double amount){
+        accountRepo.updateAccountBalanceById(accountId, amount);
+    }
+    public void updateAccountTypeById(String accountId , AccountType type){
+        accountRepo.updateAccountTypeById(accountId, type);
+    }
+    public void deleteAccountById(String accountId){
+        accountRepo.deleteAccountById(accountId);
+    }
+    public List<Account> getAccountById(String accountId){
+        return accountRepo.getAccountsById(accountId);
     }
 }

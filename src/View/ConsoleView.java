@@ -2,7 +2,9 @@ package View;
 
 import Controller.AuthController;
 import Controller.ManagerController;
+import Modal.Account;
 import Modal.Client;
+import Modal.Enums.AccountType;
 
 import java.util.Scanner;
 
@@ -21,24 +23,30 @@ public class ConsoleView {
     public void start() {
         while (running) {
             if (authController.getLoggedInUser() == null) {
-                showMenu();
-            }
-            String choice = scanner.nextLine();
-            HandleChoice(choice);
-            if (authController.getLoggedInUser() != null) {
-                if (authController.getLoggedInUser() instanceof Client) {
-                    showClientMenu();
-                } else {
-                    showManagerMenu();
-                    String choice2 = scanner.nextLine();
-                    HandleManagerChoice(choice2);
-                }
+                handleRegisterOrLogin();
+            } else if (authController.getLoggedInUser() instanceof Client) {
+                handleClientMenu();
+            } else {
+                handleManagerMenu();
             }
         }
     }
 
-    public void handleRegisterOrLogin(){
-        
+    public void handleRegisterOrLogin() {
+        showMenu();
+        String choice = scanner.nextLine();
+        HandleChoice(choice);
+    }
+
+    public void handleClientMenu() {
+        showClientMenu();
+        String choice = scanner.nextLine();
+    }
+
+    public void handleManagerMenu() {
+        showManagerMenu();
+        String choice = scanner.nextLine();
+        HandleManagerChoice(choice);
     }
 
     public void showMenu() {
@@ -89,16 +97,56 @@ public class ConsoleView {
                 String clientEmail = scanner.nextLine();
                 System.out.println("Enter The Client Password: ");
                 String clientPassword = scanner.nextLine();
-                authController.register(clientName, clientPassword, clientEmail, "client");
+                authController.register(clientName, clientEmail, clientPassword, "client");
                 break;
             case "2":
                 updateClientExtraMenu();
                 String choice2 = scanner.nextLine();
-                HandleManagerChoice(choice2);
+                HandleUpdateClientChoice(choice2);
+                break;
+            case "3":
+                System.out.println("Enter The Client ID: ");
+                String clientID = scanner.nextLine();
+                managerController.deleteClientById(clientID);
+                break;
+            case "4":
+                System.out.println("1) Checking Account");
+                System.out.println("1) Saving Account");
+                System.out.println("1) Deposit Account");
+                System.out.println("Enter The Account Type: ");
+                String typeChoice = scanner.nextLine();
+                AccountType type = HandleAccountTypes(typeChoice);
+                System.out.println("Enter The Account Amount: ");
+                double amount = scanner.nextDouble();
+                scanner.nextLine();
+                System.out.println("Enter The Client ID: ");
+                String clientId = scanner.nextLine();
+                managerController.createAccountForClient(type, amount, clientId);
+                break;
+            case "5":
+                HandleUpdatingAccount();
+                String choice5 = scanner.nextLine();
+                HandleUpdateAccount(choice5);
+                break;
+            case "6":
+                 System.out.println("Enter The Account ID: ");
+                 String accountID = scanner.nextLine();
+                 managerController.deleteAccountById(accountID);
+                break;
+            case "9":
+                System.out.println("Enter The Client ID: ");
+                String getClientID = scanner.nextLine();
+                for(Account accou : managerController.getAccountByClientId(getClientID)) {
+                    System.out.println("Account ID: " + accou.getAccountId());
+                    System.out.println("Account Type: " + accou.getAccountType());
+                    System.out.println("Account Balance: " + accou.getBalance());
+                    System.out.println("Client ID: " + accou.getClientId());
+                }
                 break;
             case "15":
                 System.out.println("List Of All the Clients: ");
-                for(Client c : managerController.getAllClients()){
+                for (Client c : managerController.getAllClients()) {
+                    System.out.println("Client ID: " + c.getClientId());
                     System.out.println("Client Name: " + c.getName());
                     System.out.println("Client Email: " + c.getEmail());
                     System.out.println("Client Password: " + c.getPassword());
@@ -108,9 +156,9 @@ public class ConsoleView {
     }
 
     public void updateClientExtraMenu() {
-        System.out.println("Update Client Name");
-        System.out.println("Update Client Email: ");
-        System.out.println("Update Client Password: ");
+        System.out.println("1) Update Client Name");
+        System.out.println("2) Update Client Email: ");
+        System.out.println("3) Update Client Password: ");
     }
 
     public void HandleUpdateClientChoice(String choice) {
@@ -126,6 +174,46 @@ public class ConsoleView {
                 System.out.println("Enter The New Client Email: ");
                 String clientEmail = scanner.nextLine();
                 managerController.updateClientEmailById(clientId, clientEmail);
+                break;
+            case "3":
+                System.out.println("Enter The New Client Password: ");
+                String clientPassword = scanner.nextLine();
+                managerController.updateClientPasswordById(clientId, clientPassword);
+                break;
+        }
+    }
+
+    public AccountType HandleAccountTypes(String choice) {
+        switch (choice) {
+            case "1":
+                return AccountType.COURANT;
+            case "2":
+                return AccountType.EPARGNE;
+            case "3":
+                return AccountType.DEPOTATERME;
+            default:
+                throw new IllegalArgumentException("Invalid choice");
+        }
+    }
+
+    public void HandleUpdatingAccount() {
+        System.out.println("1) Update Balance");
+        System.out.println("1) Update Type");
+    }
+
+    public void HandleUpdateAccount(String choice) {
+        String accountId = scanner.nextLine();
+        switch (choice) {
+            case "1":
+                System.out.println("Enter New Account Balance: ");
+                double newBalance = scanner.nextDouble();
+                managerController.updateAccountBalanceById(accountId, newBalance);
+                break;
+            case "2":
+                System.out.println("Enter New Account Type: ");
+                String typeChoice = scanner.nextLine();
+                AccountType type = HandleAccountTypes(typeChoice);
+                managerController.updateAccountTypeById(accountId, type);
                 break;
         }
     }

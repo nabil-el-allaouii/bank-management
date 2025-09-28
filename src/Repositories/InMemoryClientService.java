@@ -45,4 +45,10 @@ public class InMemoryClientService implements ClientRepository {
                 .orElseThrow(() -> new NoSuchElementException("Client not found"))
                 .setPassword(password);
     }
+
+    @Override
+    public void deleteClientById(String clientId){
+        Client clientToRemove =  clientList.stream().filter(c -> c.getClientId().equals(clientId)).findFirst().orElseThrow(() -> new NoSuchElementException("Client not found"));
+        clientList.remove(clientToRemove);
+    }
 }

@@ -25,6 +25,12 @@ public class Account {
     public double getBalance() {
         return balance;
     }
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+    public void setType(AccountType accountType) {
+        this.accountType = accountType;
+    }
     public String getClientId() {
         return clientId;
     }

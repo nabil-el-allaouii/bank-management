@@ -12,4 +12,5 @@ public interface ClientRepository {
     void updateClientNameById(String clientId , String name);
     void updateClientEmailById(String clientId , String email);
     void updateClientPasswordById(String clientId , String password);
+    void deleteClientById(String clientId);
 }

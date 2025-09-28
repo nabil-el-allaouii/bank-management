@@ -2,6 +2,7 @@ import Controller.AuthController;
 import Controller.ManagerController;
 import Modal.Client;
 import Modal.Person;
+import Repositories.InMemoryAccountService;
 import Repositories.InMemoryClientService;
 import Repositories.InMemoryManagerService;
 import Services.AuthService;
@@ -17,9 +18,10 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         InMemoryManagerService managerRepo = new InMemoryManagerService();
         InMemoryClientService clientRepo = new InMemoryClientService();
+        InMemoryAccountService accountRepo = new InMemoryAccountService();
         AuthService authService = new AuthService(clientRepo, managerRepo);
         AuthController authController = new AuthController(authService);
-        ManagerService managerService = new ManagerService(clientRepo);
+        ManagerService managerService = new ManagerService(clientRepo , accountRepo);
         ManagerController managerController = new ManagerController(managerService);
         ConsoleView consoleView = new ConsoleView(authController, managerController);
 
